@@ -7,10 +7,9 @@ build:
 dev: format lint build
 	docker compose --file ./docker-compose.dev.yaml up --remove-orphans
 
-dev-local: format lint
+dev-local: format lint migrate
 	docker compose --file ./docker-compose.dev.yaml up postgres redis -d
 	${RUN_PYTHON} python ./manage.py runserver
-
 
 lint:
 	${RUN_PYTHON} ruff check --fix ./config ./focussy

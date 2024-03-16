@@ -7,6 +7,7 @@ from aiogram_dialog import setup_dialogs
 from django.conf import settings
 from focussy.api.telegram.dialogs.main import main_window as main_window
 from focussy.api.telegram.dialogs.profile import main_window as profile_window
+from focussy.api.telegram.dialogs.task import main_window as task_window
 from focussy.api.telegram.middleware import CheckUserMiddleware
 from focussy.api.telegram.routers import router as main_router
 
@@ -19,7 +20,7 @@ bot = Bot(settings.TELEGRAM_TOKEN)
 dp = Dispatcher(storage=storage)
 
 setup_dialogs(dp)
-dp.include_routers(main_router, main_window, profile_window)
+dp.include_routers(main_router, main_window, profile_window, task_window)
 
 dp.message.middleware(CheckUserMiddleware())
 dp.callback_query.middleware(CheckUserMiddleware())
