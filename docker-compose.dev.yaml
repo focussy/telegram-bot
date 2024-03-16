@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    env_file: .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      base_network:
+
+  redis:
+    image: redis:7.0.5-alpine
+    env_file: .env
+    volumes:
+      - redis:/var/lib/redis/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      base_network:
+
+  mirgrations:
+     build: .
+     env_file: .env
+     command: poetry run python manage.py migrate
+     volumes:
+       - ./focussy:/focussy:ro
+       - ./config:/config:ro
+       - ./manage.py:/manage.py:ro
+     networks:
+       base_network:
+     depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  web:
+     build: .
+     env_file: .env
+     ports:
+       - "8000:8000"
+     command: poetry run python manage.py runserver 0.0.0.0:8000
+     volumes:
+       - ./focussy:/focussy:ro
+       - ./config:/config:ro
+       - ./manage.py:/manage.py:ro
+       - ./locale:/locale:ro
+     networks:
+       base_network:
+#     healthcheck:
+#       test: curl --silent --show-error --fail http://0.0.0.0:8000/api/v1/healthcheck
+#       interval: 10s
+#       timeout: 5s
+#       retries: 3
+     depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mirgrations:
+        condition: service_completed_successfully
+
+volumes:
+  postgres:
+    driver: local
+  redis:
+    driver: local
+  celery:
+    driver: local
+networks:
+  base_network:

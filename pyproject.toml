@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "focussy"
+version = "0.1.0"
+description = ""
+authors = ["mrmamongo <mrmamongo@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0.3"
+djangorestframework = "^3.14.0"
+aiogram = "^3.4.1"
+redis = "^5.0.3"
+aiogram-dialog = "^2.1.0"
+drf-spectacular = "^0.27.1"
+django-filter = "^24.1"
+django-debug-toolbar = "^4.3.0"
+django-loki = "^0.1.4"
+psycopg2-binary = "^2.9.9"
+django-cors-headers = "^4.3.1"
+python-dotenv = "^1.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
