@@ -22,7 +22,7 @@ class ApiConfig(AppConfig):
                 logger.warning("Starting polling...")
                 await dp.start_polling(bot, handle_signals=False)
 
-            if settings.BOT_USE_POLLING and settings.BOT_MAIN:
+            if settings.BOT_USE_POLLING:
                 threading.Thread(
                     daemon=True, target=asyncio.run, args=(start_bot(),)
                 ).start()
