@@ -5,7 +5,7 @@ from aiogram import BaseMiddleware
 from aiogram.types import Update
 
 from focussy.api.models import Client
-from focussy.api.telegram.utils import USER_NAME, IS_NEW_NAME
+from focussy.api.telegram.utils.consts import USER_NAME, IS_NEW_NAME
 
 logger = logging.getLogger(__name__)
 

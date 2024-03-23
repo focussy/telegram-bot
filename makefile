@@ -7,7 +7,7 @@ build:
 dev: format lint build
 	docker compose --file ./docker-compose.dev.yaml up --remove-orphans
 
-dev-local: format lint migrate
+dev-local: format lint
 	docker compose --file ./docker-compose.dev.yaml up postgres redis -d
 	${RUN_PYTHON} python ./manage.py runserver
 

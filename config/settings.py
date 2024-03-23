@@ -179,3 +179,4 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "secret :^)")
 WEBHOOK_URL = f"{os.getenv('WEBHOOK_BASE')}/api/v1/{TELEGRAM_TOKEN}"
 BOT_STORAGE_BROKER = os.getenv("STORAGE_BROKER_URL", "redis://redis:6379/0")
 BOT_USE_POLLING = os.getenv("BOT_USE_POLLING", "False") == "True"
+SUBJECT = "Русский язык"

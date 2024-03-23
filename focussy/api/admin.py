@@ -15,10 +15,10 @@ class TaskInline(admin.StackedInline):
     extra = 0
 
 
-@admin.register(models.TaskGroup)
-class TaskGroupAdmin(admin.ModelAdmin):
+@admin.register(models.TaskNumber)
+class TaskNumberAdmin(admin.ModelAdmin):
     inlines = (TaskInline,)
-    list_display = ("name", "description")
+    list_display = ("number", "name",)
     list_display_links = ("name",)
 
 
@@ -34,6 +34,17 @@ class TaskAdmin(admin.ModelAdmin, DynamicArrayMixin):
     list_display = ("title", "subject", "task_number")
 
 
-@admin.register(models.TaskSolutionAttempt)
-class TaskSolutionAttemptAdmin(admin.ModelAdmin):
-    list_display = ("task", "client", "correct", "date")
+class InlineTaskModel(admin.TabularInline):
+    model = models.Test.tasks.through
+    extra = 0
+
+
+@admin.register(models.Test)
+class TestAdmin(admin.ModelAdmin):
+    inlines = (InlineTaskModel,)
+    exclude = ("tasks",)
+
+
+@admin.register(models.TestSolutionAttempt)
+class TestSolutionAttemptAdmin(admin.ModelAdmin):
+    pass
