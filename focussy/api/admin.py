@@ -40,15 +40,9 @@ class TaskAdmin(admin.ModelAdmin, DynamicArrayMixin):
         return instance.task_number.subject.name
 
 
-class InlineTaskModel(admin.TabularInline):
-    model = models.Test.tasks.through
-    extra = 0
-
-
 @admin.register(models.Test)
 class TestAdmin(admin.ModelAdmin):
-    inlines = (InlineTaskModel,)
-    exclude = ("tasks",)
+    pass
 
 
 @admin.register(models.TestSolutionAttempt)
