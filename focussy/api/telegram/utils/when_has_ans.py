@@ -11,5 +11,5 @@ class WhenHasAnswers(Predicate):
     ) -> bool:
         return (
             "current_task" in dialog_manager.dialog_data
-            and "answers" in dialog_manager.dialog_data
+            and "answers" in dialog_manager.dialog_data["current_task"]
         )

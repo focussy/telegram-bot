@@ -34,23 +34,17 @@ tests_window = Dialog(
     Window(
         Format("Тесты"),
         Column(
-            SwitchTo(
+            Button(
                 Const("Составить случайный тест"),
-                id="test_random",
-                state=TestsSG.test_random,
+                id="start_test",
+                on_click=start_random_test,
             ),
-            SwitchTo(Const("Тест по задаче"), id="test_task", state=TestsSG.test_task),
+            SwitchTo(
+                Const("Тест по задаче <WIP>"), id="test_task", state=TestsSG.test_task
+            ),
             Cancel(Const("Назад"), id="back_to_menu"),
         ),
         state=TestsSG.main,
-    ),
-    Window(
-        Format("Случайный тест"),
-        Column(
-            Button(Const("Начать"), id="start_test", on_click=start_random_test),
-            SwitchTo(Const("Назад"), state=TestsSG.main, id="back_to_test_menu"),
-        ),
-        state=TestsSG.test_random,
     ),
     Window(
         Format("Тест по задаче"),

@@ -1,8 +1,6 @@
 import random
-from random import randint
 
 from django.db import models
-from django.db.models import Count
 from django_better_admin_arrayfield.models.fields import ArrayField
 
 
@@ -18,12 +16,18 @@ class Client(models.Model):
     def __str__(self):
         return self.username
 
-
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
 class Subject(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Предмет"
+        verbose_name_plural = "Предметы"
 
 
 class TaskNumber(models.Model):
@@ -33,6 +37,16 @@ class TaskNumber(models.Model):
 
     def __str__(self):
         return f"{self.number}. {self.name}"
+
+    class Meta:
+        verbose_name = "Номер задания"
+        verbose_name_plural = "Номера заданий"
+
+class TaskType(models.TextChoices):
+    TEXT = ("text",)
+    NUM_UNORDERED = ("num_unordered",)
+    NUM_ORDERED = ("num_ordered",)
+    SINGLE_CHOICE = ("single_choice",)
 
 
 class Task(models.Model):
@@ -49,24 +63,44 @@ class Task(models.Model):
     )
     correct_answer = models.CharField(max_length=255, null=False, blank=False)
     task_number = models.ForeignKey(TaskNumber, on_delete=models.PROTECT)
+    task_type = models.CharField(
+        max_length=255,
+        choices=TaskType.choices,
+        default=TaskType.TEXT,
+    )
 
     @staticmethod
     def random(task_number: int, subject_id: int = 1):
-        return random.choice(Task.objects.filter(
-            task_number__subject_id=subject_id, task_number__number=task_number
-        ).all())
+        return random.choice(
+            Task.objects.filter(
+                task_number__subject_id=subject_id, task_number__number=task_number
+            ).all()
+        )
 
     def __str__(self):
         return str(self.pk)
 
+    class Meta:
+        verbose_name = "Задание"
+        verbose_name_plural = "Задания"
 
 class Test(models.Model):
     name = models.CharField(primary_key=True)
     tasks = ArrayField(models.IntegerField(), null=False, blank=True, default=list)
 
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = "Тест"
+        verbose_name_plural = "Тесты"
 
 class TestSolutionAttempt(models.Model):
     test = models.ForeignKey(Test, on_delete=models.PROTECT)
 
     answers = ArrayField(models.CharField(max_length=255))
     date = models.DateTimeField(auto_now_add=True)
+
+
+    class Meta:
+        verbose_name = "Попытка решения"
+        verbose_name_plural = "Попытки решений"

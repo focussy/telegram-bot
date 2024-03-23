@@ -5,6 +5,9 @@ from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from focussy.api import models
 
 
+admin.site.title = "Focussy Admin"
+
+
 @admin.register(models.Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ("username", "telegram_id")
