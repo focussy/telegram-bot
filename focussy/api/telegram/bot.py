@@ -9,6 +9,7 @@ from focussy.api.telegram.dialogs.main import main_window as main_window
 from focussy.api.telegram.dialogs.stat import stat_window
 from focussy.api.telegram.dialogs.task import main_window as task_window
 from focussy.api.telegram.dialogs.tests import tests_window
+from focussy.api.telegram.dialogs.test import test_dialog
 from focussy.api.telegram.middleware import CheckUserMiddleware
 from focussy.api.telegram.routers import router as main_router
 
@@ -21,7 +22,9 @@ bot = Bot(settings.TELEGRAM_TOKEN)
 dp = Dispatcher(storage=storage)
 
 setup_dialogs(dp)
-dp.include_routers(main_router, main_window, stat_window, tests_window, task_window)
+dp.include_routers(
+    main_router, main_window, test_dialog, stat_window, tests_window, task_window
+)
 
 dp.message.middleware(CheckUserMiddleware())
 dp.callback_query.middleware(CheckUserMiddleware())

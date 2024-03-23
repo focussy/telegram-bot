@@ -18,20 +18,26 @@ class TaskInline(admin.StackedInline):
 @admin.register(models.TaskNumber)
 class TaskNumberAdmin(admin.ModelAdmin):
     inlines = (TaskInline,)
-    list_display = ("number", "name",)
+    list_display = ("number", "name", "get_subject")
+
+    def get_subject(self, instance: models.TaskNumber):
+        return instance.subject.name
+
     list_display_links = ("name",)
 
 
 @admin.register(models.Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    inlines = (TaskInline,)
     list_display = ("name",)
     list_display_links = ("name",)
 
 
 @admin.register(models.Task)
 class TaskAdmin(admin.ModelAdmin, DynamicArrayMixin):
-    list_display = ("title", "subject", "task_number")
+    list_display = ("title", "task_number", "get_subject")
+
+    def get_subject(self, instance: models.Task):
+        return instance.task_number.subject.name
 
 
 class InlineTaskModel(admin.TabularInline):

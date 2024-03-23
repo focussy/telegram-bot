@@ -7,6 +7,9 @@ from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.kbd import Column, SwitchTo, Cancel, Button
 from aiogram_dialog.widgets.text import Const, Format
 
+from focussy.api.telegram.controllers import create_random_test
+from focussy.api.telegram.dialogs.test import TestSG
+
 logger = logging.getLogger(__name__)
 
 
@@ -23,7 +26,8 @@ class MainWindowGetterData(TypedDict):
 async def start_random_test(
     query: CallbackQuery, button: Button, manager: DialogManager
 ):
-    pass
+    test = create_random_test()
+    await manager.start(TestSG.main, data=test.pk)
 
 
 tests_window = Dialog(
@@ -43,7 +47,7 @@ tests_window = Dialog(
     Window(
         Format("Случайный тест"),
         Column(
-            Button(Const("Начать"), id="start_test"),
+            Button(Const("Начать"), id="start_test", on_click=start_random_test),
             SwitchTo(Const("Назад"), state=TestsSG.main, id="back_to_test_menu"),
         ),
         state=TestsSG.test_random,
