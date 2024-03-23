@@ -19,6 +19,8 @@ class Client(models.Model):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
 class Subject(models.Model):
     name = models.CharField(max_length=255)
 
@@ -42,15 +44,17 @@ class TaskNumber(models.Model):
         verbose_name = "Номер задания"
         verbose_name_plural = "Номера заданий"
 
+
 class TaskType(models.TextChoices):
     TEXT = ("text",)
+    TEXT_MULTI = ("text_multi",)
     NUM_UNORDERED = ("num_unordered",)
     NUM_ORDERED = ("num_ordered",)
     SINGLE_CHOICE = ("single_choice",)
 
 
 class Task(models.Model):
-    title = models.CharField(max_length=255, null=True, blank=True)
+    title = models.TextField(null=True, blank=True)
     body = models.TextField()
     media = ArrayField(
         base_field=models.ImageField(upload_to="task_media"),
@@ -62,6 +66,7 @@ class Task(models.Model):
         base_field=models.CharField(max_length=255), null=True, blank=True
     )
     correct_answer = models.CharField(max_length=255, null=False, blank=False)
+    explanation = models.TextField(null=True, blank=True)
     task_number = models.ForeignKey(TaskNumber, on_delete=models.PROTECT)
     task_type = models.CharField(
         max_length=255,
@@ -84,22 +89,24 @@ class Task(models.Model):
         verbose_name = "Задание"
         verbose_name_plural = "Задания"
 
+
 class Test(models.Model):
     name = models.CharField(primary_key=True)
     tasks = ArrayField(models.IntegerField(), null=False, blank=True, default=list)
 
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name = "Тест"
         verbose_name_plural = "Тесты"
+
 
 class TestSolutionAttempt(models.Model):
     test = models.ForeignKey(Test, on_delete=models.PROTECT)
 
     answers = ArrayField(models.CharField(max_length=255))
     date = models.DateTimeField(auto_now_add=True)
-
 
     class Meta:
         verbose_name = "Попытка решения"

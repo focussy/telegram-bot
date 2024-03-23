@@ -39,6 +39,8 @@ class SubjectAdmin(admin.ModelAdmin):
 class TaskAdmin(admin.ModelAdmin, DynamicArrayMixin):
     list_display = ("title", "task_number", "get_subject")
 
+    list_filter = ("task_number__number", )
+
     def get_subject(self, instance: models.Task):
         return instance.task_number.subject.name
 
