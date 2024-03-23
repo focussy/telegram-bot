@@ -1,20 +1,13 @@
 import logging
 from typing import TypedDict
 
-from aiogram.fsm.state import State, StatesGroup
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.kbd import Button, Group, Start
 from aiogram_dialog.widgets.text import Const, Format
 
-from focussy.api.telegram.dialogs.stat import StatSG
-from focussy.api.telegram.dialogs.tests import TestsSG
+from focussy.api.telegram.states import MainSG, StatSG, TestsSG
 
 logger = logging.getLogger(__name__)
-
-
-class MainSG(StatesGroup):
-    main = State()
-    task = State()
 
 
 class MainWindowGetterData(TypedDict):

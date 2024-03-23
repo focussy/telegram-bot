@@ -11,8 +11,6 @@ class Client(models.Model):
     telegram_id = models.CharField(primary_key=True)
     username = models.CharField(max_length=255, unique=True)
 
-    test_attempts = models.ManyToManyField("TestSolutionAttempt")
-
     def __str__(self):
         return self.username
 
@@ -47,7 +45,6 @@ class TaskNumber(models.Model):
 
 class TaskType(models.TextChoices):
     TEXT = ("text",)
-    TEXT_MULTI = ("text_multi",)
     NUM_UNORDERED = ("num_unordered",)
     NUM_ORDERED = ("num_ordered",)
     SINGLE_CHOICE = ("single_choice",)
@@ -104,9 +101,10 @@ class Test(models.Model):
 
 class TestSolutionAttempt(models.Model):
     test = models.ForeignKey(Test, on_delete=models.PROTECT)
-
-    answers = ArrayField(models.CharField(max_length=255))
+    user = models.ForeignKey(Client, on_delete=models.PROTECT)
+    answers = models.JSONField(null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
+    rating = models.IntegerField(null=False, blank=False)
 
     class Meta:
         verbose_name = "Попытка решения"

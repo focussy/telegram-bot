@@ -1,16 +1,28 @@
 # Register your models here.
 from django.contrib import admin
+from django.db.models import JSONField
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
+from django_json_widget.widgets import JSONEditorWidget
 
 from focussy.api import models
 
-
 admin.site.title = "Focussy Admin"
+
+
+class AttemptAdminInline(admin.TabularInline):
+    model = models.TestSolutionAttempt
+
+    formfield_overrides = {
+        # fields.JSONField: {'widget': JSONEditorWidget}, # if django < 3.1
+        JSONField: {"widget": JSONEditorWidget},
+    }
 
 
 @admin.register(models.Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ("username", "telegram_id")
+
+    inlines = (AttemptAdminInline,)
 
 
 class TaskInline(admin.StackedInline):
@@ -39,17 +51,22 @@ class SubjectAdmin(admin.ModelAdmin):
 class TaskAdmin(admin.ModelAdmin, DynamicArrayMixin):
     list_display = ("title", "task_number", "get_subject")
 
-    list_filter = ("task_number__number", )
+    list_filter = ("task_number__number",)
 
     def get_subject(self, instance: models.Task):
         return instance.task_number.subject.name
 
 
 @admin.register(models.Test)
-class TestAdmin(admin.ModelAdmin):
+class TestAdmin(admin.ModelAdmin, DynamicArrayMixin):
     pass
 
 
 @admin.register(models.TestSolutionAttempt)
 class TestSolutionAttemptAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("test", "user", "rating")
+
+    formfield_overrides = {
+        # fields.JSONField: {'widget': JSONEditorWidget}, # if django < 3.1
+        JSONField: {"widget": JSONEditorWidget},
+    }

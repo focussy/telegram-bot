@@ -9,7 +9,7 @@ class Validator(ABC):
 
 class TextValidator(Validator):
     def validate(self, answer: str, correct_answer: str):
-        return answer.lower() == correct_answer.lower()
+        return all((a in correct_answer) for a in answer.split(","))
 
 
 class NumUnorderedValidator(Validator):
@@ -32,7 +32,3 @@ class AnswerValidator:
     @staticmethod
     def validate(task_type: str, answer: str, correct_answer: str):
         return AnswerValidator.validators[task_type].validate(answer, correct_answer)
-
-
-if __name__ == "__main__":
-    print(AnswerValidator.validate("num_unordered", "21", "1,2"))

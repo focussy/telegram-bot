@@ -1,22 +1,15 @@
 import logging
 from typing import TypedDict
 
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery
-from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.widgets.kbd import Column, SwitchTo, Cancel, Button
+from aiogram_dialog import Dialog, DialogManager, Window
+from aiogram_dialog.widgets.kbd import Button, Cancel, Column, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format
 
 from focussy.api.telegram.controllers import create_random_test
-from focussy.api.telegram.dialogs.test import TestSG
+from focussy.api.telegram.states import TestSG, TestsSG
 
 logger = logging.getLogger(__name__)
-
-
-class TestsSG(StatesGroup):
-    main = State()
-    test_random = State()
-    test_task = State()
 
 
 class MainWindowGetterData(TypedDict):

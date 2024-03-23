@@ -1,19 +1,15 @@
 import logging
 from typing import TypedDict
 
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.kbd import Back, Group, Select
 from aiogram_dialog.widgets.text import Format
 
 from focussy.api.models import Task
+from focussy.api.telegram.states import TaskSG
 
 logger = logging.getLogger(__name__)
-
-
-class TaskSG(StatesGroup):
-    main = State()
 
 
 class MainWindowGetterData(TypedDict):

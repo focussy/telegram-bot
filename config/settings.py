@@ -51,6 +51,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "debug_toolbar",
     "django_better_admin_arrayfield",
+    "django_json_widget",
 ]
 
 PROJECT_APPS = [

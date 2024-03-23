@@ -106,9 +106,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "answers",
-                    django_better_admin_arrayfield.models.fields.ArrayField(
-                        base_field=models.CharField(max_length=255), size=None
-                    ),
+                    models.JSONField(blank=False, null=False),
                 ),
                 ("date", models.DateTimeField(auto_now_add=True)),
                 (
