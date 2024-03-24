@@ -1,5 +1,6 @@
 import json
 
+from asgiref.sync import async_to_sync
 from django.http import HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
@@ -14,5 +15,6 @@ def healthcheck(request: HttpRequest) -> HttpResponse:
 
 
 @csrf_exempt
+@async_to_sync
 async def webhook(request: HttpRequest) -> HttpResponse:
     return await dp.feed_webhook_update(bot, json.loads(request.body.decode("utf-8")))
