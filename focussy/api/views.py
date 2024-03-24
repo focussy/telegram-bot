@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from asgiref.sync import async_to_sync
@@ -15,6 +16,5 @@ def healthcheck(request: HttpRequest) -> HttpResponse:
 
 
 @csrf_exempt
-@async_to_sync
-async def webhook(request: HttpRequest) -> HttpResponse:
-    return await dp.feed_raw_update(bot, json.loads(request.body.decode("utf-8")))
+def webhook(request: HttpRequest) -> HttpResponse:
+    return asyncio.run(dp.feed_raw_update(bot, json.loads(request.body.decode("utf-8"))))
