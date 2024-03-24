@@ -17,4 +17,4 @@ def healthcheck(request: HttpRequest) -> HttpResponse:
 @csrf_exempt
 @async_to_sync
 async def webhook(request: HttpRequest) -> HttpResponse:
-    return await dp.feed_webhook_update(bot, json.loads(request.body.decode("utf-8")))
+    return await dp.feed_raw_update(bot, request.body.decode("utf-8"))
