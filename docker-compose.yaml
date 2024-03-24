@@ -50,6 +50,8 @@ services:
   web:
      build: .
      env_file: .env
+     environment:
+       - BOT_MAIN=True
      ports:
        - "8000:8000"
      command: poetry run gunicorn -k uvicorn.workers.UvicornWorker config.asgi:application --bind 0.0.0.0:8000

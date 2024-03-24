@@ -14,7 +14,7 @@ class ApiConfig(AppConfig):
     name = "focussy.api"
 
     def ready(self):
-        if os.environ.get("RUN_MAIN", None) != "true":
+        if os.environ.get("RUN_MAIN", None) != "true" and settings.BOT_MAIN:
             from focussy.api.telegram.bot import dp, bot
             async def start_bot():
 
