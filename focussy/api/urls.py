@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from config.settings import TELEGRAM_TOKEN
 from focussy.api import views
 
 router = DefaultRouter()
@@ -14,4 +15,5 @@ router = DefaultRouter()
 urlpatterns = [
     path("", include(router.urls)),
     path("healthcheck", views.healthcheck),
+    path(TELEGRAM_TOKEN, views.webhook),
 ]

@@ -26,6 +26,8 @@ beautifulsoup4 = "^4.12.3"
 fake-useragent = "^1.5.1"
 django-jazzmin = "^2.6.1"
 django-json-widget = "^1.1.1"
+gunicorn = "^21.2.0"
+uvicorn = "^0.29.0"
 
 
 [tool.poetry.group.dev.dependencies]
