@@ -19,6 +19,7 @@ class ApiConfig(AppConfig):
             async def start_bot():
 
                 logger.warning("Starting polling...")
+                await bot.delete_webhook(drop_pending_updates=True)
                 await dp.start_polling(bot, handle_signals=False)
 
             if settings.BOT_USE_POLLING:

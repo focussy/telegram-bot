@@ -17,11 +17,7 @@ def healthcheck(request: HttpRequest) -> HttpResponse:
     return HttpResponse("OK", status=status.HTTP_200_OK)
 
 
-def webhook_handler(update):
-    anyio.from_thread.run(dp.feed_raw_update, bot, update)
-
-
 @csrf_exempt
 async def webhook(request: HttpRequest) -> HttpResponse:
-    await anyio.to_thread.run_sync(webhook_handler, json.loads(request.body.decode("utf-8")))
+    await dp.feed_raw_update(bot, json.loads(request.body.decode("utf-8")))
     return HttpResponse("OK", status=status.HTTP_200_OK)
