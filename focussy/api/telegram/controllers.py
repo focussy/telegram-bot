@@ -11,7 +11,7 @@ async def create_random_test(task_numbers: list[int] | None = None):
     :return:
     """
     if not task_numbers:
-        task_numbers = [4, *range(9, 15)]
+        task_numbers = [4, *range(9, 16)]
     return await models.Test.objects.acreate(
         name=get_random_name(),
         tasks=[

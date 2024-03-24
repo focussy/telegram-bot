@@ -3,10 +3,11 @@ from typing import TypedDict
 
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
-from aiogram_dialog.widgets.kbd import Button, Cancel, Column, SwitchTo
+from aiogram_dialog.widgets.kbd import Button, Cancel, Column
 from aiogram_dialog.widgets.text import Const, Format
 
 from focussy.api.telegram.controllers import create_random_test
+from focussy.api.telegram.dialogs.task_config import TaskConfigSG
 from focussy.api.telegram.states import TestSG, TestsSG
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,12 @@ async def start_random_test(
     await manager.start(TestSG.main, data=test.pk)
 
 
+async def goto_task_config(
+    query: CallbackQuery, button: Button, manager: DialogManager
+):
+    await manager.start(TaskConfigSG.main)
+
+
 tests_window = Dialog(
     Window(
         Format("Тесты"),
@@ -32,20 +39,13 @@ tests_window = Dialog(
                 id="start_test",
                 on_click=start_random_test,
             ),
-            SwitchTo(
-                Const("🚧 Тест по задаче <WIP> 🚧"),
-                id="test_task",
-                state=TestsSG.test_task,
+            Button(
+                Const("Тест по задаче"),
+                id="start_task_config",
+                on_click=goto_task_config,
             ),
             Cancel(Const("Назад"), id="back_to_menu"),
         ),
         state=TestsSG.main,
-    ),
-    Window(
-        Format("Тест по задаче"),
-        Column(
-            SwitchTo(Const("Назад"), state=TestsSG.main, id="back_to_test_menu"),
-        ),
-        state=TestsSG.test_task,
     ),
 )

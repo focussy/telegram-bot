@@ -59,7 +59,7 @@ async def summary_getter(dialog_manager: DialogManager, **_):
         "done": len([answer for answer in answers if answer["done"]]),
         "tasks_number": len(answers),
         "errors": [
-            (i, err["answer"], err["correct_answer"])
+            (i + 1, err["answer"], err["correct_answer"])
             for i, err in enumerate(answers)
             if not err["correct"]
         ],

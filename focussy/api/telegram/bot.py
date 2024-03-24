@@ -8,6 +8,7 @@ from django.conf import settings
 from focussy.api.telegram.dialogs.main import main_window as main_window
 from focussy.api.telegram.dialogs.stat import stat_window
 from focussy.api.telegram.dialogs.task import main_window as task_window
+from focussy.api.telegram.dialogs.task_config import task_config_dialog
 from focussy.api.telegram.dialogs.tests import tests_window
 from focussy.api.telegram.dialogs.test.dialog import test_dialog
 from focussy.api.telegram.middleware import CheckUserMiddleware
@@ -23,7 +24,13 @@ dp = Dispatcher(storage=storage)
 
 setup_dialogs(dp)
 dp.include_routers(
-    main_router, main_window, test_dialog, stat_window, tests_window, task_window
+    main_router,
+    main_window,
+    test_dialog,
+    task_config_dialog,
+    stat_window,
+    tests_window,
+    task_window,
 )
 
 dp.message.middleware(CheckUserMiddleware())

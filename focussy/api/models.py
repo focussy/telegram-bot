@@ -17,7 +17,7 @@ class Client(models.Model):
             select answer as correct, count(1) as answers
                 from (select (jsonb_array_elements(at.answers) ->> 'correct') as answer
             from api_testsolutionattempt at
-            where at.user_id = '507942140') as aa
+            where at.user_id = %s) as aa
             group by answer
             order by answer desc;
             """,

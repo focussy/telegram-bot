@@ -19,10 +19,18 @@ class MainWindowGetterData(TypedDict):
 async def stat_getter(dialog_manager: DialogManager, **_):
     user: Client = dialog_manager.middleware_data[USER_NAME]
     stats = Client.get_answer_stats(user.pk)
+    try:
+        correct = stats[0][1]
+    except IndexError:
+        correct = 0
+    try:
+        wrong = stats[1][1]
+    except IndexError:
+        wrong = 0
     return {
         "solved": await user.testsolutionattempt_set.acount(),
-        "correct": stats[0][1],
-        "wrong": stats[1][1],
+        "correct": correct,
+        "wrong": wrong,
     }
 
 
