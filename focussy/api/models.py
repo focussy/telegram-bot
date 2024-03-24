@@ -82,7 +82,7 @@ class TaskType(models.TextChoices):
 
 class Task(models.Model):
     title = models.TextField(null=True, blank=True)
-    body = models.TextField()
+    body = models.TextField(null=True, blank=True)
     media = ArrayField(
         base_field=models.ImageField(upload_to="task_media"),
         null=False,

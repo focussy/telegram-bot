@@ -16,8 +16,8 @@ class ApiConfig(AppConfig):
     def ready(self):
         if os.environ.get("RUN_MAIN", None) != "true" and settings.BOT_MAIN:
             from focussy.api.telegram.bot import dp, bot
-            async def start_bot():
 
+            async def start_bot():
                 logger.warning("Starting polling...")
                 await bot.delete_webhook(drop_pending_updates=True)
                 await dp.start_polling(bot, handle_signals=False)
@@ -27,7 +27,9 @@ class ApiConfig(AppConfig):
                     daemon=True, target=asyncio.run, args=(start_bot(),)
                 ).start()
             else:
+
                 async def setup_bot():
+                    logger.warning("Setting up webhook...")
                     await bot.delete_webhook(drop_pending_updates=True)
                     await bot.set_webhook(settings.WEBHOOK_URL)
 

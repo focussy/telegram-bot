@@ -9,7 +9,7 @@ dev: format lint build
 
 dev-local: format lint
 	docker compose --file ./docker-compose.dev.yaml up postgres redis -d
-	${RUN_PYTHON} python ./manage.py runserver
+	BOT_MAIN=True ${RUN_PYTHON} python ./manage.py runserver 0.0.0.0:8081
 
 lint:
 	${RUN_PYTHON} ruff check --fix ./config ./focussy
