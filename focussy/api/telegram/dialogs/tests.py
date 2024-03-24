@@ -19,7 +19,7 @@ class MainWindowGetterData(TypedDict):
 async def start_random_test(
     query: CallbackQuery, button: Button, manager: DialogManager
 ):
-    test = create_random_test()
+    test = await create_random_test()
     await manager.start(TestSG.main, data=test.pk)
 
 
@@ -33,7 +33,9 @@ tests_window = Dialog(
                 on_click=start_random_test,
             ),
             SwitchTo(
-                Const("Тест по задаче <WIP>"), id="test_task", state=TestsSG.test_task
+                Const("🚧 Тест по задаче <WIP> 🚧"),
+                id="test_task",
+                state=TestsSG.test_task,
             ),
             Cancel(Const("Назад"), id="back_to_menu"),
         ),

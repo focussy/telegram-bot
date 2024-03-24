@@ -1,3 +1,5 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup
 from django.core.management import BaseCommand
@@ -22,13 +24,23 @@ class Command(BaseCommand):
             # result_body = data[1].strip().encode().decode('utf-8', 'ignore') + '\n'
             result_body = ""
             result_title = data[0].strip().encode().decode("utf-8", "ignore")
+            answers = []
             for d in data[1:]:
                 formatted = d.strip().encode().decode("utf-8", "ignore")
                 result_body += formatted
+                splitted = formatted.split(")")
+                if len(splitted) > 1:
+                    answers.append(splitted[1].strip().replace("\xa0", ""))
 
             for i, li in enumerate(raw_task.find_all("li")):
                 result_body += (
                     f"{i + 1}) {li.text.strip().encode().decode('utf-8', 'ignore')}\n"
+                )
+                answers.append(
+                    re.search(
+                        r"\(Н([ЕИ])\)\S+",
+                        li.text.strip().encode().decode("utf-8", "ignore"),
+                    ).group(0)
                 )
             raw_explanation = BeautifulSoup(tag["comment"], features="html.parser")
             result_explanation = ""
@@ -40,7 +52,7 @@ class Command(BaseCommand):
                 )
 
             print("TITLE:", result_title)
-            print("BODY:", result_body)
+            print("BODY:", answers)
             print(
                 "CORRECT ANSWER:",
                 ",".join([ans["answer"] for ans in tag["task_question"]["answers"]]),
@@ -49,6 +61,7 @@ class Command(BaseCommand):
             Task.objects.create(
                 title=result_title,
                 body=result_body,
+                answers=answers,
                 correct_answer=",".join(
                     [ans["answer"] for ans in tag["task_question"]["answers"]]
                 ),
@@ -56,3 +69,6 @@ class Command(BaseCommand):
                 task_number_id=13,
                 explanation=result_explanation,
             )
+
+
+#

@@ -18,16 +18,23 @@ class MainWindowGetterData(TypedDict):
 
 async def stat_getter(dialog_manager: DialogManager, **_):
     user: Client = dialog_manager.middleware_data[USER_NAME]
-
-    return {"solved": await user.testsolutionattempt_set.acount()}
+    stats = Client.get_answer_stats(user.pk)
+    return {
+        "solved": await user.testsolutionattempt_set.acount(),
+        "correct": stats[0][1],
+        "wrong": stats[1][1],
+    }
 
 
 stat_window = Dialog(
     Window(
         Format("Моя статистика"),
         Format("Выполнено тестов: {solved}"),
+        Format("Правильных ответов: {correct}"),
+        Format("Неправильных ответов: {wrong}"),
         Cancel(Const("Назад")),
         state=StatSG.main,
         getter=stat_getter,
     ),
+    Window(Format("Статистика по заданиям"), state=StatSG.task_stat),
 )

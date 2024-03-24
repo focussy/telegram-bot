@@ -9,12 +9,16 @@ class Validator(ABC):
 
 class TextValidator(Validator):
     def validate(self, answer: str, correct_answer: str):
-        return all((a in correct_answer) for a in answer.split(","))
+        return len(correct_answer) == len(answer) and all(
+            (a in answer) for a in correct_answer
+        )
 
 
 class NumUnorderedValidator(Validator):
     def validate(self, answer: str, correct_answer: str):
-        return all((a in correct_answer) for a in answer)
+        return len(correct_answer) == len(answer) and all(
+            (a in answer) for a in correct_answer
+        )
 
 
 class NumOrderedValidator(Validator):
@@ -31,4 +35,6 @@ class AnswerValidator:
 
     @staticmethod
     def validate(task_type: str, answer: str, correct_answer: str):
-        return AnswerValidator.validators[task_type].validate(answer, correct_answer)
+        return len(answer) > 0 and AnswerValidator.validators[task_type].validate(
+            answer, correct_answer
+        )

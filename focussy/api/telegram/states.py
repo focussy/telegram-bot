@@ -9,6 +9,7 @@ class MainSG(StatesGroup):
 
 class StatSG(StatesGroup):
     main = State()
+    task_stat = State()
 
 
 class TaskSG(StatesGroup):
@@ -17,6 +18,7 @@ class TaskSG(StatesGroup):
 
 class TestSG(StatesGroup):
     main = State()
+    answer = State()
     summary = State()
     rate_test = State()
     cancel_approve = State()
