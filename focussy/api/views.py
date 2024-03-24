@@ -1,6 +1,7 @@
 import asyncio
 import json
 
+import anyio.to_thread
 import anyio.from_thread
 from asgiref.sync import async_to_sync
 from django.http import HttpRequest, HttpResponse
@@ -16,7 +17,11 @@ def healthcheck(request: HttpRequest) -> HttpResponse:
     return HttpResponse("OK", status=status.HTTP_200_OK)
 
 
+def webhook_handler(update):
+    anyio.from_thread.run(dp.feed_raw_update, bot, update)
+
+
 @csrf_exempt
-def webhook(request: HttpRequest) -> HttpResponse:
-    anyio.from_thread.run(dp.feed_raw_update, bot, json.loads(request.body.decode("utf-8")))
+async def webhook(request: HttpRequest) -> HttpResponse:
+    await anyio.to_thread.run_sync(webhook_handler, json.loads(request.body.decode("utf-8")))
     return HttpResponse("OK", status=status.HTTP_200_OK)
