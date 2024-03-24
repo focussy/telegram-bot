@@ -17,5 +17,5 @@ def healthcheck(request: HttpRequest) -> HttpResponse:
 
 @csrf_exempt
 def webhook(request: HttpRequest) -> HttpResponse:
-    anyio.run(dp.feed_raw_update(bot, json.loads(request.body.decode("utf-8"))))
+    asyncio.run(dp.feed_raw_update(bot, json.loads(request.body.decode("utf-8"))))
     return HttpResponse("OK", status=status.HTTP_200_OK)
