@@ -90,6 +90,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.mount("/django", ASGIHandler())
-
 init(app)
+app.mount("/", ASGIHandler())
+
