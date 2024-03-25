@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.utils.log import DEFAULT_LOGGING
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -155,25 +156,32 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "users.User"
 
 LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {},
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'loki': {
+            'class': 'django_loki.LokiFormatter',  # required
+            'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] [%(funcName)s] %(message)s',  # optional, default is logging.BASIC_FORMAT
+            'datefmt': '%Y-%m-%d %H:%M:%S',  # optional, default is '%Y-%m-%d %H:%M:%S'
         },
     },
-    "root": {
-        "handlers": ["console"],
-        "level": "WARNING",
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO"),
-            "propagate": False,
+    'handlers': {
+        'loki': {
+            'level': 'DEBUG',  # required
+            'class': 'django_loki.LokiHttpHandler',  # required
+            'host': 'loki',  # required, your grafana/Loki server host
+            'formatter': 'loki',  # required, loki formatter,
+            'source': 'web',  # optional, label name for Loki, default is Loki
+            'tz': 'UTC+3',  # optional, timezone for formatting timestamp, default is UTC, e.g:Asia/Shanghai
         },
     },
+    'loggers': {
+        # Default logger for all Python modules
+        '': {
+            'level': os.environ.get("DJANGO_LOG_LEVEL", "INFO"),
+            'handlers': ['loki'],
+        },
+    }
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

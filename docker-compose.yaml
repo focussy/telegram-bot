@@ -1,11 +1,18 @@
 version: '3.8'
 
+x-logging: &loki-logging
+  driver: loki
+  options:
+    loki-url: "http://loki:3100/api/prom/push"
+
 services:
   postgres:
     image: postgres:15
     env_file: .env
+    environment:
+      - POSTGRES_DB=focussy
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -15,14 +22,12 @@ services:
       retries: 5
     networks:
       base_network:
-
+    logging: *loki-logging
   redis:
     image: redis:7.0.5-alpine
     env_file: .env
     volumes:
-      - redis:/var/lib/redis/data
-    ports:
-      - "6379:6379"
+      - ./redis:/var/lib/redis/data
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -30,8 +35,8 @@ services:
       retries: 3
     networks:
       base_network:
-
-  mirgrations:
+    logging: *loki-logging
+  migrations:
      build: .
      env_file: .env
      command: poetry run python manage.py migrate
@@ -46,41 +51,95 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-
   web:
      build: .
-     env_file: .env
+     env_file:
+       - .env
+       - ./deploy/gunicorn/gunicorn.env
      environment:
        - BOT_MAIN=True
      ports:
        - "8000:8000"
-     command: poetry run gunicorn -k uvicorn.workers.UvicornWorker config.asgi:application --bind 0.0.0.0:8000
+     command: poetry run gunicorn -k uvicorn.workers.UvicornWorker config.asgi:application --bind 0.0.0.0:8000 -c /usr/web/config/gunicorn/gunicorn.conf.py
      volumes:
-       - ./focussy:/focussy:ro
-       - ./config:/config:ro
-       - ./manage.py:/manage.py:ro
-       - ./locale:/locale:ro
+       - ./focussy:/focussy
+       - ./config:/config
+       - ./manage.py:/manage.py
+       - ./locale:/locale
+       - ./deploy/gunicorn:/usr/web/config/gunicorn
      networks:
        base_network:
-#     healthcheck:
-#       test: curl --silent --show-error --fail http://0.0.0.0:8000/api/v1/healthcheck
-#       interval: 10s
-#       timeout: 5s
-#       retries: 3
      depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-      mirgrations:
+      migrations:
         condition: service_completed_successfully
-
-volumes:
-  postgres:
-    driver: local
-  redis:
-    driver: local
-  celery:
-    driver: local
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    env_file:
+      - ./deploy/grafana/grafana.env
+    ports:
+      - "3000:3000"
+    networks:
+      - base_network
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deploy/grafana/datasources:/etc/grafana/provisioning/datasources:rw
+  statsd-exporter:
+      image: prom/statsd-exporter:v0.15.0
+      restart: unless-stopped
+      command:
+        - "--statsd.mapping-config=/statsd/statsd.conf"
+      networks:
+        - base_network
+      volumes:
+        - ./deploy/statsd-exporter/statsd.conf:/statsd/statsd.conf
+  prometheus:
+      image: prom/prometheus:latest
+      restart: unless-stopped
+      command:
+        - "--config.file=/etc/prometheus/prometheus.yml"
+        - "--storage.tsdb.path=/prometheus"
+        - "--web.console.libraries=/etc/prometheus/console_libraries"
+        - "--web.console.templates=/etc/prometheus/consoles"
+        - "--storage.tsdb.retention.time=24h"
+        - "--web.enable-lifecycle"
+      ports:
+        - "9090:9090"
+      networks:
+        - base_network
+      volumes:
+        - ./deploy/prometheus:/etc/prometheus
+        - prometheus_data:/prometheus
+  loki:
+    image: "grafana/loki:latest"
+    #  - "3100:3100" port closed because loki does not support basic auth
+    volumes:
+      - ./deploy/loki.yaml:/etc/loki/loki.yaml:ro
+      - loki_data:/loki
+    command:
+      - "--config.file=/etc/loki/loki.yaml"
+    user: "root"
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: stop-first
+      resources:
+        limits:
+          memory: 1024M
+    networks:
+      - base_network
 networks:
   base_network:
+
+volumes:
+  grafana_data:
+    driver: local
+  loki_data:
+    driver: local
+  prometheus_data:
+    driver: local
