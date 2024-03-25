@@ -3,7 +3,7 @@ import os
 
 # [ Logging ]
 logconfig = os.getenv(
-    'GC_LOGCONFIG', '/usr/web/confs/gunicorn/gunicorn.conf')
+    'GC_LOGCONFIG', '/deploy/gunicorn/gunicorn.conf')
 accesslog = os.getenv('GC_ACCESSLOG', '-')
 errorlog = os.getenv('GC_ERRORLOG', '-')
 statsd_host = os.getenv('GC_STATSD_HOST', None)

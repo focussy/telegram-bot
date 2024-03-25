@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -26,7 +26,7 @@ services:
     image: redis:7.0.5-alpine
     env_file: .env
     volumes:
-      - redis_data:/var/lib/redis/data
+      - ./redis_data:/var/lib/redis/data
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -39,10 +39,6 @@ services:
      build: .
      env_file: .env
      command: poetry run python manage.py migrate
-     volumes:
-       - ./focussy:/focussy:ro
-       - ./config:/config:ro
-       - ./manage.py:/manage.py:ro
      networks:
        base_network:
      depends_on:
@@ -59,13 +55,7 @@ services:
        - BOT_MAIN=True
      ports:
        - "8000:8000"
-     command: poetry run gunicorn -k uvicorn.workers.UvicornWorker config.asgi:application --bind 0.0.0.0:8000 -c /usr/web/config/gunicorn/gunicorn.conf.py
-     volumes:
-       - ./focussy:/focussy
-       - ./config:/config
-       - ./manage.py:/manage.py
-       - ./locale:/locale
-       - ./deploy/gunicorn:/usr/web/config/gunicorn
+     command: poetry run gunicorn -k uvicorn.workers.UvicornWorker config.asgi:application --bind 0.0.0.0:8000 -c /deploy/gunicorn/gunicorn.conf.py
      networks:
        base_network:
      depends_on:
@@ -141,8 +131,4 @@ volumes:
   loki_data:
     driver: local
   prometheus_data:
-    driver: local
-  postgres_data:
-    driver: local
-  redis_data:
     driver: local

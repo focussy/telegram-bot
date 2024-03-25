@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-rcmjltu88g+r@a6a8d(xx&#hyo4qfpbs&o9#aa(&v8=!#vnbr*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
 
 # Application definition
 
@@ -79,7 +79,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost,http://localhost:8000,http://localhost:3000").split(","),
+    "http://localhost,http://localhost:8000,http://localhost:3000").split(",")
 
 CSRF_TRUSTED_ORIGINS = [*CORS_ALLOWED_ORIGINS]
 
