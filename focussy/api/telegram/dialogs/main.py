@@ -2,7 +2,7 @@ import logging
 from typing import TypedDict
 
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Button, Group, Start
+from aiogram_dialog.widgets.kbd import Group, Start
 from aiogram_dialog.widgets.text import Const, Format
 
 from focussy.api.telegram.states import MainSG, StatSG, TestsSG

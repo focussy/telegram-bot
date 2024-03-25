@@ -61,8 +61,9 @@ async def on_next_task(
         return
     dialog_manager.dialog_data["current_task_number"] = current_task_number
     dialog_manager.dialog_data["current_task"] = convert_task_to_dialog(
-        await run_async(Task.objects.get,
-            pk=dialog_manager.dialog_data["answers"][current_task_number]["task_id"]
+        await run_async(
+            Task.objects.get,
+            pk=dialog_manager.dialog_data["answers"][current_task_number]["task_id"],
         )
     )
     await dialog_manager.switch_to(state=TestSG.main)

@@ -19,7 +19,9 @@ class TaskConfigSG(StatesGroup):
 
 async def task_numbers_getter(dialog_manager: DialogManager, **_):
     tasks_raw = [4, *range(9, 16)]
-    tasks = await run_async(TaskNumber.objects.filter(number__in=tasks_raw).defer("subject").all)
+    tasks = await run_async(
+        TaskNumber.objects.filter(number__in=tasks_raw).defer("subject").all
+    )
     return {
         "tasks": [
             {

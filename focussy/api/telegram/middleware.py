@@ -1,8 +1,6 @@
-import functools
 import logging
 from typing import Any, Awaitable, Callable, Dict
 
-import anyio.to_thread
 from aiogram import BaseMiddleware
 from aiogram.types import Update
 
