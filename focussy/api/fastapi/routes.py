@@ -8,8 +8,6 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response
 
-from focussy.api.telegram.bot import dp, bot
-
 router = APIRouter(prefix="/telegram")
 
 logger = logging.getLogger(__name__)

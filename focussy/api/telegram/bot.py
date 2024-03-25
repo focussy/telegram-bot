@@ -15,22 +15,3 @@ from focussy.api.telegram.routers import router as main_router
 
 logger = logging.getLogger(__name__)
 
-redis = redis.asyncio.from_url(settings.BOT_STORAGE_BROKER)
-storage = RedisStorage(redis, key_builder=DefaultKeyBuilder(with_destiny=True))
-
-bot = Bot(settings.TELEGRAM_TOKEN)
-dp = Dispatcher(storage=storage)
-
-setup_dialogs(dp)
-dp.include_routers(
-    main_router,
-    main_window,
-    test_dialog,
-    task_config_dialog,
-    stat_window,
-    tests_window,
-)
-
-dp.message.middleware(CheckUserMiddleware())
-dp.callback_query.middleware(CheckUserMiddleware())
-logger.warning("Initializing bot...")

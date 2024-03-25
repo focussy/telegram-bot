@@ -12,25 +12,3 @@ logger = logging.getLogger(__name__)
 class ApiConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "focussy.api"
-
-    def ready(self):
-        if os.environ.get("RUN_MAIN", None) != "true" and settings.BOT_MAIN:
-            from focussy.api.telegram.bot import dp, bot
-
-            async def start_bot():
-                logger.warning("Starting polling...")
-                await bot.delete_webhook(drop_pending_updates=True)
-                await dp.start_polling(bot, handle_signals=False)
-
-            if settings.BOT_USE_POLLING:
-                threading.Thread(
-                    daemon=True, target=asyncio.run, args=(start_bot(),)
-                ).start()
-            else:
-
-                async def setup_bot():
-                    logger.warning("Setting up webhook...")
-                    await bot.delete_webhook(drop_pending_updates=True)
-                    await bot.set_webhook(settings.WEBHOOK_URL)
-
-                asyncio.run(setup_bot())
