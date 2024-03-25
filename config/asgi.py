@@ -12,7 +12,6 @@ import os
 from django.conf import settings
 from django.core.asgi import get_asgi_application
 from fastapi import FastAPI
-from starlette.applications import Starlette
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
@@ -22,7 +21,7 @@ app = FastAPI()
 
 def init(app: FastAPI):
     if not settings.BOT_USE_POLLING:
-        from focussy.api.starlette.routes import router
+        from focussy.api.fastapi.routes import router
 
         app.include_router(router)
         app.mount(path="/", app=application)

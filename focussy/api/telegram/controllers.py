@@ -17,10 +17,7 @@ async def create_random_test(task_numbers: list[int] | None = None):
         tasks=[
             t.pk
             for t in await asyncio.gather(
-                *[
-                    Task.get_random_number(task_number)
-                    for task_number in task_numbers
-                ]
+                *[Task.get_random_number(task_number) for task_number in task_numbers]
             )
         ],
     )
