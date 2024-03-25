@@ -44,8 +44,7 @@ async def on_size_selected(
     callback: CallbackQuery, widget: Any, dialog_manager: DialogManager, item_id: str
 ):
     task_number = dialog_manager.dialog_data["task_number"]
-    task_size = int(item_id)
-    test = await create_task_test(task_number, task_size)
+    test = await run_async(create_task_test, task_number, int(item_id))
     await dialog_manager.start(TestSG.main, data=test.pk)
 
 

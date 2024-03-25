@@ -20,7 +20,7 @@ class CheckUserMiddleware(BaseMiddleware):
     ) -> Any:
         client, is_new = await run_async(
             Client.objects.get_or_create,
-            event.from_user.id,
+            pk=event.from_user.id,
             defaults={"username": event.from_user.username},
         )
         data[USER_NAME] = client
