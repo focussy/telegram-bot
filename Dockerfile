@@ -20,7 +20,6 @@ COPY ./manage.py /manage.py
 COPY ./config/ /config
 COPY ./deploy/gunicorn /deploy/gunicorn
 COPY ./focussy /focussy
-COPY ./locale /locale
 
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-cache
