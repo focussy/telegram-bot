@@ -9,7 +9,7 @@ from focussy.api.telegram.bot import dp, bot
 router = APIRouter()
 
 
-@router.post(f"/{settings.BOT_TOKEN}")
+@router.post(f"telegram/{settings.TELEGRAM_TOKEN}")
 async def webhook(request: Request):
     await dp.feed_raw_update(bot, await request.json())
     return Response(status_code=status.HTTP_200_OK)
