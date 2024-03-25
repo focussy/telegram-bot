@@ -79,7 +79,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost,http://localhost:8000,http://localhost:3000").split(",")
+    "http://localhost,http://localhost:8000,http://localhost:3000",
+).split(",")
 
 CSRF_TRUSTED_ORIGINS = [*CORS_ALLOWED_ORIGINS]
 
@@ -185,7 +186,7 @@ LOGGING = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "secret :^)")
-WEBHOOK_URL = f"{os.getenv('WEBHOOK_BASE')}/api/v1/{TELEGRAM_TOKEN}"
+WEBHOOK_URL = f"{os.getenv('WEBHOOK_BASE')}/{TELEGRAM_TOKEN}"
 BOT_STORAGE_BROKER = os.getenv("STORAGE_BROKER_URL", "redis://redis:6379/0")
 BOT_USE_POLLING = os.getenv("BOT_USE_POLLING", "False") == "True"
 BOT_MAIN = os.getenv("BOT_MAIN", "False") == "True"

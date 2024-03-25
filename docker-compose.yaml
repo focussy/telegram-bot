@@ -55,7 +55,7 @@ services:
        - BOT_MAIN=True
      ports:
        - "8000:8000"
-     command: poetry run gunicorn -k uvicorn.workers.UvicornWorker config.asgi:application --bind 0.0.0.0:8000 -c /deploy/gunicorn/gunicorn.conf.py
+     command: poetry run gunicorn -k uvicorn.workers.UvicornWorker config.asgi --bind 0.0.0.0:8000 -c /deploy/gunicorn/gunicorn.conf.py
      networks:
        base_network:
      depends_on:
