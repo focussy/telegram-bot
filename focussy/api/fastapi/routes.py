@@ -18,11 +18,11 @@ logger = logging.getLogger(__name__)
 @router.post(f"/{settings.TELEGRAM_TOKEN}")
 def webhook(request: Request):
     try:
-        anyio.from_thread.run_sync(
+        anyio.from_thread.run(
             dp.feed_update,
             bot,
             Update.model_validate(
-                anyio.from_thread.run_sync(request.json), context={"bot": bot}
+                anyio.from_thread.run(request.json), context={"bot": bot}
             ),
         )
     finally:
