@@ -4,6 +4,8 @@ from asgiref.sync import sync_to_async
 from django.db import connection, models
 from django_better_admin_arrayfield.models.fields import ArrayField
 
+from focussy.api.telegram.adapters import run_async
+
 
 class Client(models.Model):
     telegram_id = models.CharField(primary_key=True)
@@ -111,11 +113,11 @@ class Task(models.Model):
     @classmethod
     async def get_random_number(cls, task_number: int, subject_id: int = 1):
         return random.choice(
-            await sync_to_async(
+            await run_async(
                 Task.objects.filter(
                     task_number__subject_id=subject_id, task_number__number=task_number
                 ).all
-            )()
+            )
         )
 
 

@@ -24,3 +24,5 @@ COPY ./manage.py /manage.py
 COPY ./config/ /config
 COPY ./deploy/gunicorn /deploy/gunicorn
 COPY ./focussy /focussy
+
+RUN poetry run python ./manage.py collectstatic

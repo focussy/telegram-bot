@@ -17,11 +17,11 @@ async def on_dialog_start(
     **_,
 ):
     test_id = start_data
-    test = await run_async(Test.objects.aget, pk=test_id)
+    test = await run_async(Test.objects.get, pk=test_id)
     dialog_manager.dialog_data["test_id"] = test_id
     dialog_manager.dialog_data["current_task_number"] = 0
     dialog_manager.dialog_data["current_task"] = convert_task_to_dialog(
-        await run_async(Task.objects.aget, pk=test.tasks[0])
+        await run_async(Task.objects.get, pk=test.tasks[0])
     )
     dialog_manager.dialog_data["answers"] = [
         {"task_id": task_id, "done": False, "correct": False} for task_id in test.tasks
