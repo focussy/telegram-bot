@@ -9,14 +9,14 @@ https://docs.djangoproject.com/en/5.0/howto/deployment/asgi/
 
 import os
 
+import django
 from django.conf import settings
-from django.core.asgi import get_asgi_application
+from django.core.handlers.asgi import ASGIHandler
 from fastapi import FastAPI
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
-application = get_asgi_application()
-app = FastAPI()
+django.setup(set_prefix=False)
 
 
 def init(app: FastAPI):
@@ -24,7 +24,9 @@ def init(app: FastAPI):
         from focussy.api.fastapi.routes import router
 
         app.include_router(router)
-        # app.mount(path="/", app=application)
 
+
+app = FastAPI()
+app.mount("/", ASGIHandler())
 
 init(app)
