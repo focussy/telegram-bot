@@ -9,12 +9,12 @@ from starlette.responses import Response
 
 from focussy.api.telegram.bot import dp, bot
 
-router = APIRouter(prefix="telegram/")
+router = APIRouter(prefix="/telegram")
 
 logger = logging.getLogger(__name__)
 
 
-@router.post(f"{settings.TELEGRAM_TOKEN}")
+@router.post(f"/{settings.TELEGRAM_TOKEN}")
 async def webhook(request: Request):
     try:
         await dp.feed_update(bot, Update.model_validate(await request.json(), context={"bot": bot}))
