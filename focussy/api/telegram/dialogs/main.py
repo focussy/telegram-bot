@@ -19,7 +19,6 @@ main_window = Dialog(
         Format("Главное меню"),
         Group(
             Start(Const("Мои задачи"), id="my_tasks", state=TestsSG.main),
-            Button(Const("Все задачи"), id="tasks"),
             Start(Const("Статистика"), id="statistic", state=StatSG.main),
             width=2,
         ),

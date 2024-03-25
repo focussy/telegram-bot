@@ -5,6 +5,7 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button, ManagedMultiselect, Select
 
 from focussy.api.models import Task
+from focussy.api.telegram.adapters import run_async
 from focussy.api.telegram.states import TestSG
 from focussy.api.telegram.utils.answer_validators import AnswerValidator
 from focussy.api.telegram.utils.converters import convert_task_to_dialog
@@ -60,7 +61,7 @@ async def on_next_task(
         return
     dialog_manager.dialog_data["current_task_number"] = current_task_number
     dialog_manager.dialog_data["current_task"] = convert_task_to_dialog(
-        await Task.objects.aget(
+        await run_async(Task.objects.get,
             pk=dialog_manager.dialog_data["answers"][current_task_number]["task_id"]
         )
     )

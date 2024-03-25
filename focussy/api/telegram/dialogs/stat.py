@@ -6,6 +6,7 @@ from aiogram_dialog.widgets.kbd import Cancel
 from aiogram_dialog.widgets.text import Const, Format
 
 from focussy.api.models import Client
+from focussy.api.telegram.adapters import run_async
 from focussy.api.telegram.states import StatSG
 from focussy.api.telegram.utils.consts import USER_NAME
 
@@ -18,7 +19,7 @@ class MainWindowGetterData(TypedDict):
 
 async def stat_getter(dialog_manager: DialogManager, **_):
     user: Client = dialog_manager.middleware_data[USER_NAME]
-    stats = Client.get_answer_stats(user.pk)
+    stats = await run_async(Client.get_answer_stats, user.pk)
     try:
         correct = stats[0][1]
     except IndexError:
@@ -28,7 +29,7 @@ async def stat_getter(dialog_manager: DialogManager, **_):
     except IndexError:
         wrong = 0
     return {
-        "solved": await user.testsolutionattempt_set.acount(),
+        "solved": await run_async(user.testsolutionattempt_set.count),
         "correct": correct,
         "wrong": wrong,
     }

@@ -7,6 +7,7 @@ from aiogram_dialog.widgets.kbd import Cancel, Column, Select, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format
 
 from focussy.api.models import TaskNumber
+from focussy.api.telegram.adapters import run_async
 from focussy.api.telegram.controllers import create_task_test
 from focussy.api.telegram.states import TestSG
 
@@ -18,7 +19,7 @@ class TaskConfigSG(StatesGroup):
 
 async def task_numbers_getter(dialog_manager: DialogManager, **_):
     tasks_raw = [4, *range(9, 16)]
-    tasks = TaskNumber.objects.filter(number__in=tasks_raw).defer("subject").all()
+    tasks = await run_async(TaskNumber.objects.filter(number__in=tasks_raw).defer("subject").all)
     return {
         "tasks": [
             {
