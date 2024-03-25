@@ -1,6 +1,5 @@
 import logging
 
-import anyio.from_thread
 from aiogram.types import Update
 from django.conf import settings
 from fastapi import APIRouter
@@ -16,6 +15,8 @@ logger = logging.getLogger(__name__)
 @router.post(f"/{settings.TELEGRAM_TOKEN}")
 async def webhook(request: Request):
     try:
+        dp = request.app.state.dp()
+        bot = request.app.state.bot()
         await dp.feed_update(
             bot,
             Update.model_validate(await request.json(), context={"bot": bot}),

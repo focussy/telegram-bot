@@ -1,4 +1,3 @@
-import functools
 from typing import Callable
 
 import anyio.to_thread

@@ -15,5 +15,4 @@ router = DefaultRouter()
 urlpatterns = [
     path("", include(router.urls)),
     path("healthcheck", views.healthcheck),
-    path(TELEGRAM_TOKEN, views.webhook),
 ]
