@@ -163,3 +163,5 @@ deploy/backend/.secrets.toml
 
 
 static/
+postgres/
+redis/

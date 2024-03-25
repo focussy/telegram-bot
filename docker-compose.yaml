@@ -7,12 +7,11 @@ x-logging: &loki-logging
 
 services:
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
+    restart: unless-stopped
     env_file: .env
-    environment:
-      - POSTGRES_DB=focussy
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -27,7 +26,7 @@ services:
     image: redis:7.0.5-alpine
     env_file: .env
     volumes:
-      - ./redis:/var/lib/redis/data
+      - redis_data:/var/lib/redis/data
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -142,4 +141,8 @@ volumes:
   loki_data:
     driver: local
   prometheus_data:
+    driver: local
+  postgres_data:
+    driver: local
+  redis_data:
     driver: local
