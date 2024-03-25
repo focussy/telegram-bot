@@ -27,6 +27,6 @@ def init(app: FastAPI):
 
 
 app = FastAPI()
-app.mount("/", ASGIHandler())
+app.mount("/django", ASGIHandler())
 
 init(app)
