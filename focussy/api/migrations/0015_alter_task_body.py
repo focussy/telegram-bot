@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0014_remove_client_test_attempts'),
+        ("api", "0014_remove_client_test_attempts"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='task',
-            name='body',
+            model_name="task",
+            name="body",
             field=models.TextField(blank=True, null=True),
         ),
     ]
