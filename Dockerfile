@@ -16,12 +16,11 @@ COPY poetry.lock pyproject.toml ./
 
 FROM base as development
 
-COPY ./manage.py /manage.py
-COPY ./config/ /config
-COPY ./deploy/gunicorn /deploy/gunicorn
-COPY ./focussy /focussy
-
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-cache
 
 ENV PYTHONPATH=/
+COPY ./manage.py /manage.py
+COPY ./config/ /config
+COPY ./deploy/gunicorn /deploy/gunicorn
+COPY ./focussy /focussy

@@ -1,3 +1,6 @@
+import logging
+
+from aiogram.types import Update
 from django.conf import settings
 from fastapi import APIRouter
 from starlette import status
@@ -8,8 +11,12 @@ from focussy.api.telegram.bot import dp, bot
 
 router = APIRouter()
 
+logger = logging.getLogger(__name__)
 
 @router.post(f"telegram/{settings.TELEGRAM_TOKEN}")
 async def webhook(request: Request):
-    await dp.feed_raw_update(bot, await request.json())
+    try:
+        await dp.feed_update(bot, Update.model_validate(await request.json(), context={"bot": bot}))
+    finally:
+        logger.debug("Handled update")
     return Response(status_code=status.HTTP_200_OK)

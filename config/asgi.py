@@ -24,7 +24,7 @@ def init(app: FastAPI):
         from focussy.api.fastapi.routes import router
 
         app.include_router(router)
-        app.mount(path="/", app=application)
+        # app.mount(path="/", app=application)
 
 
 init(app)
